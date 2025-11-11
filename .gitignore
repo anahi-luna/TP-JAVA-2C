@@ -1,0 +1,19 @@
+# NetBeans
+nbproject/
+build/
+dist/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# Compilados y logs
+*.class
+*.log
+*.jar
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
