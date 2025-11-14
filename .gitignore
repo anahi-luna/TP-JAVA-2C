@@ -1,19 +1,15 @@
-# NetBeans
-nbproject/
-build/
-dist/
+# Ignorar carpeta del workspace de Eclipse
+.metadata/
 
-# Eclipse
-.classpath
-.project
-.settings/
+# Carpetas generadas por Eclipse
 bin/
+target/
 
-# Compilados y logs
-*.class
-*.log
-*.jar
+# Archivos de Eclipse
+*.classpath
+*.project
+*.settings/
 
-# Sistema operativo
+# Archivos del sistema
 .DS_Store
 Thumbs.db
