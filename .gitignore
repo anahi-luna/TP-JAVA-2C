@@ -1,0 +1,15 @@
+# Ignorar carpeta del workspace de Eclipse
+.metadata/
+
+# Carpetas generadas por Eclipse
+bin/
+target/
+
+# Archivos de Eclipse
+*.classpath
+*.project
+*.settings/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
