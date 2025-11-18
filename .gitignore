@@ -5,11 +5,5 @@
 bin/
 target/
 
-# Archivos de Eclipse
-*.classpath
-*.project
-*.settings/
+.settings/
 
-# Archivos del sistema
-.DS_Store
-Thumbs.db
