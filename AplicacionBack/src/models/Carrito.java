@@ -3,6 +3,8 @@ package models;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import enums.EstadoDelCarrito;
+
 public class Carrito {
 
 	private int id;
