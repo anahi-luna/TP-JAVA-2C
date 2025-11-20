@@ -14,7 +14,7 @@ public abstract class Contenedor<T> {
 	protected abstract String extraerClave(T elemento);
 	
 	//Agregar un solo elemento
-		public void  agregar(T elemento) {
+		public void  crear(T elemento) {
 			if(elemento == null ) {
 				throw new IllegalArgumentException("El elemento no puede ser null");
 			}
@@ -52,4 +52,44 @@ public abstract class Contenedor<T> {
 		public boolean existe(String clave) {
 			return buscar(clave) != null;
 		}
+		
+		// Eliminar por clave
+		public boolean eliminar(String clave) {
+	        if (clave == null) return false;
+
+	        for (int i = 0; i < listado.size(); i++) {
+	            T elemento = listado.get(i);
+	            String claveElem = extraerClave(elemento);
+
+	            if (clave.equals(claveElem)) {
+	                listado.remove(i);
+	                return true; 
+	            }
+	        }
+
+	        return false;
+	    }
+		
+		//Editar elemento
+		public boolean editar(T elementoActualizado) {
+		    if (elementoActualizado == null) {
+		        throw new IllegalArgumentException("El elemento no puede ser null");
+		    }
+
+		    String clave = extraerClave(elementoActualizado);
+		    if (clave == null || clave.trim().isEmpty()) {
+		        throw new IllegalArgumentException("La clave no puede estar vacía");
+		    }
+
+		    for (int i = 0; i < listado.size(); i++) {
+		        T existente = listado.get(i);
+		        if (clave.equals(extraerClave(existente))) {
+		            listado.set(i, elementoActualizado); // reemplazo completo
+		            return true;
+		        }
+		    }
+
+		    return false;
+		}
+
 }
