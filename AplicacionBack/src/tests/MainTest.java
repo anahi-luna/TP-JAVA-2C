@@ -61,17 +61,14 @@ public class MainTest {
 		}
 		*/
 	
-		
-		
+		/* // TEST SERVICE LOCATOR 
 		ArticuloContenedor cont = new ArticuloContenedor();
-        ArticuloServicio svc = new ArticuloServicio(cont);
-        
         TiendaServiceLocator locator = new TiendaServiceLocator();
         
-        locator.registrar("ARTICULO", svc);
+        locator.registrar("articulos", new ArticuloServicio(cont));
         
         try (Scanner sc = new Scanner(System.in)){
-        	System.out.println("Escribí comandos (ej: articulos/agregar?codigo=A1&descripcion=Lapiz&precio=120&stock=10)");
+        	System.out.println("Escribí comandos (ej: articulos/crear?codigo=A1&descripcion=Lapiz&precio=120&stock=10");
             System.out.println("Salir: exit");
             
             while(true) {
@@ -86,14 +83,14 @@ public class MainTest {
                     continue;
                 }
                 
-             // obtener servicio por recurso
-                Object serv = locator.get(soli.getRecurso().toUpperCase());
+             // OBTENER SERVICIO POR RECURSO
+                Object serv = locator.get(soli.getRecurso());
                 if (serv == null) {
                     System.out.println("No existe servicio para: " + soli.getRecurso());
                     continue;
                 }
                 
-             // ejecutar
+             // EJECUTAR
                 Object resultado = ((ArticuloServicio)serv).ejecutar(soli);
                 if (resultado instanceof List) {
                     ((List<?>) resultado).forEach(System.out::println);
@@ -101,8 +98,16 @@ public class MainTest {
                     System.out.println(resultado);
                 }
             }
-        }
+        } */
         
+		/*//COMANDOS DE PRUEBA 
+         * articulos/crear?codigo=A2&descripcion=Cuaderno+Rayado&precio=450&stock=50 //CREAR
+         * articulos/crear?codigo=A3&descripcion=Goma&Borra&precio=80&stock=30		 //CREAR
+         * articulos/listar															 //TRAER TODOS
+         * articulos/buscar?codigo=A1												 //BUSCAR
+         * articulos/editar?codigo=A1&descripcion=Lapiz+Negro&precio=150 			 //EDITAR
+         * articulos/eliminar?codigo=A3												 //ELIMINAR
+         * */
         
 	}
 

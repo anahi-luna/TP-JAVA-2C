@@ -33,10 +33,12 @@ public class ComandoParser {
 		if(query != null && !query.trim().isEmpty()) {
 			String[] pares = query.split("&");
 			for(String par : pares) {
+				
 				String[] kv = par.split("=",2);
-				String k = URLDecoder.decode(kv[1], StandardCharsets.UTF_8);
-				String v = kv.length > 1 ? URLDecoder.decode(kv[1], StandardCharsets.UTF_8) : "";
-				params.put(k, v);
+				String key = kv.length > 0 ? URLDecoder.decode(kv[0], StandardCharsets.UTF_8) : "";
+				String value = kv.length > 1 ? URLDecoder.decode(kv[1], StandardCharsets.UTF_8) : "";
+				
+				params.put(key, value);
 			}
 		}
 		

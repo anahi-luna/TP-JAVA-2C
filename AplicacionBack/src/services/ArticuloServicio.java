@@ -47,7 +47,7 @@ public class ArticuloServicio implements Servicio{
                 List<Articulo> todos = contenedor.getTodos();
                 return todos;
 			case "actualizarstock":
-                String cod = param.get("codigo");
+                String cod = param.get("codigo"); //CORREGIR STOCK 
                 String stockStr = param.get("stock");
                 Articulo art = contenedor.buscar(cod);
                 if (art == null) return "ERROR: artículo no encontrado";
