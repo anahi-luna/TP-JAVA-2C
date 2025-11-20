@@ -1,21 +1,50 @@
 package models;
 
-public abstract class Usuario {
-    protected String nombreUsuario;
-    protected String contrasena;
-    protected double saldo; // Módulo de Saldo
+public class Usuario {
+    private String nombreUsuario;
+    private String contrasena;
+    private UsuarioTipo tipo;
+    private double saldo;
 
-    public Usuario(String nombreUsuario, String contrasena) {
+    // Constructor
+    public Usuario(String nombreUsuario, String contrasena, UsuarioTipo tipo) {
         this.nombreUsuario = nombreUsuario;
         this.contrasena = contrasena;
-        this.saldo = 0.0;
+        this.tipo = tipo;
+        this.saldo = 0.0; // Inicializamos el saldo en cero
     }
 
-    public String getNombreUsuario() { return nombreUsuario; }
-    public String getContrasena() { return contrasena; }
-    public double getSaldo() { return saldo; }
-    
-    public void setSaldo(double saldo) { this.saldo = saldo; }
+    // Getters
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
 
-    public abstract String getTipo();
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public UsuarioTipo getTipo() {
+        return tipo;
+    }
+
+    public double getSaldo() {
+        return saldo;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
+
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "nombreUsuario='" + nombreUsuario + '\'' +
+                ", tipo=" + tipo +
+                ", saldo=" + saldo +
+                '}';
+    }
 }
