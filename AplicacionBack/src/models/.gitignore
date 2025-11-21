@@ -4,3 +4,7 @@
 /DetalleCompra.class
 /Empleado.class
 /Usuario.class
+/Carrito.class
+/CarritoItem.class
+/CompraItem.class
+/EstadoDelCarrito.class
