@@ -13,16 +13,16 @@ public class Carrito {
 	private Usuario usuario;
 	private List<CarritoItem> items;
 	private EstadoDelCarrito estado; 
-	private LocalDateTime fechaCreacion;
-	private LocalDateTime fechaModificacion;
 	
-	public Carrito(int id, List<CarritoItem> items, EstadoDelCarrito estado,
-			LocalDateTime fechaCreacion, LocalDateTime fechaModificacion) {
+	public Carrito(int id, Usuario usuario, List<CarritoItem> items, EstadoDelCarrito estado) {
 		this.id = id;
+		this.usuario = usuario; 
 		this.items = items;
 		this.estado = estado;
-		this.fechaCreacion = fechaCreacion;
-		this.fechaModificacion = fechaModificacion;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
 	}
 
 	public List<CarritoItem> getItems() {
@@ -39,18 +39,6 @@ public class Carrito {
 
 	public void setEstado(EstadoDelCarrito estado) {
 		this.estado = estado;
-	}
-
-	public LocalDateTime getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public LocalDateTime getFechaModificacion() {
-		return fechaModificacion;
-	}
-
-	public void setFechaModificacion(LocalDateTime fechaModificacion) {
-		this.fechaModificacion = fechaModificacion;
 	}
 
 	public int getId() {
