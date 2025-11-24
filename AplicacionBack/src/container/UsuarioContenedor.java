@@ -1,12 +1,21 @@
 package container;
 
 import models.Usuario;
-import enums.UsuarioTipo;
-import java.util.ArrayList;
-import java.util.List;
 
-public class UsuarioContenedor {
-    private static UsuarioContenedor instancia;
+public class UsuarioContenedor extends Contenedor<Usuario>{
+
+	public UsuarioContenedor() {
+		super();
+	}
+	
+	@Override
+	protected String extraerClave(Usuario usuario) {
+		if(usuario == null) return null;
+		return usuario.getNombreUsuario();
+	}
+	
+	
+    /*private static UsuarioContenedor instancia;
     private List<Usuario> usuarios;
 
     private UsuarioContenedor() {
@@ -42,5 +51,5 @@ public class UsuarioContenedor {
 
     public List<Usuario> listarTodos() {
         return usuarios;
-    }
+    }*/
 }

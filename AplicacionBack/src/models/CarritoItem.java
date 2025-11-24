@@ -2,41 +2,30 @@ package models;
 
 public class CarritoItem {
 
-	private int id; 
-	private Articulo articulo; //cada carrito, tiene varios articulo==carritoItem
-	private int cantidad; 
+	private String articuloCodigo; // guardamos código para identificar
+    private Articulo articulo;     // referencia (puede ser null si se prefiere solo codigo)
+    private int cantidad;
 	
-	public CarritoItem(int id, Articulo articulo, int cantidad) {
-		this.id = id;
+    public CarritoItem(String articuloCodigo, Articulo articulo, int cantidad) {
+		this.articuloCodigo = articuloCodigo;
 		this.articulo = articulo;
 		this.cantidad = cantidad;
 	}
-
-	public Articulo getArticulo() {
-		return articulo;
-	}
-
-	public void setArticulo(Articulo articulo) {
-		this.articulo = articulo;
-	}
-
-	public int getCantidad() {
-		return cantidad;
-	}
-
-	public void setCantidad(int cantidad) {
-		this.cantidad = cantidad;
-	}
-
-	public int getId() {
-		return id;
-	}
 	
-	public double getSubtotal() {
-		return cantidad * articulo.getPrecio();
-	}
-	
-	
+    public String getArticuloCodigo() { return articuloCodigo; }
+    public Articulo getArticulo() { return articulo; }
+    public int getCantidad() { return cantidad; }
+    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
+
+    public double getSubtotal() {
+        return (articulo != null) ? articulo.getPrecio() * cantidad : 0.0;
+    }
+
+    @Override
+    public String toString() {
+        String desc = (articulo != null) ? articulo.getDescripcion() : "N/D";
+        return articuloCodigo + " | " + desc + " | cant=" + cantidad + " | subtotal=" + getSubtotal();
+    }
 	
 	
 }

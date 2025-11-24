@@ -2,51 +2,27 @@ package models;
 
 public class CompraItem {
 
-	private int id;
-	private Articulo articulo;
-	private int cantidad;
-	private double precioUnitario; 
-	
-	public CompraItem(int id, Articulo articulo, int cantidad, double precioUnitario) {
-		this.id = id;
-		this.articulo = articulo;
-		this.cantidad = cantidad;
-		this.precioUnitario = precioUnitario;
-	}
+	private String articuloCodigo;
+    private String descripcion;
+    private int cantidad;
+    private double precioUnitario;
 
-	public int getId() {
-		return id;
-	}
+    public CompraItem(String articuloCodigo, String descripcion, int cantidad, double precioUnitario) {
+        this.articuloCodigo = articuloCodigo;
+        this.descripcion = descripcion;
+        this.cantidad = cantidad;
+        this.precioUnitario = precioUnitario;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public String getArticuloCodigo() { return articuloCodigo; }
+    public String getDescripcion() { return descripcion; }
+    public int getCantidad() { return cantidad; }
+    public double getPrecioUnitario() { return precioUnitario; }
 
-	public Articulo getArticulo() {
-		return articulo;
-	}
+    public double getSubtotal() { return cantidad * precioUnitario; }
 
-	public void setArticulo(Articulo articulo) {
-		this.articulo = articulo;
-	}
-
-	public int getCantidad() {
-		return cantidad;
-	}
-
-	public void setCantidad(int cantidad) {
-		this.cantidad = cantidad;
-	}
-
-	public double getPrecioUnitario() {
-		return precioUnitario;
-	}
-	
-	public void setPrecioUnitario(double precioUnitario) {
-		this.precioUnitario = precioUnitario;
-	}
-
-	public double getSubtotal () {
-		return cantidad  * precioUnitario; 
-	}
+    @Override
+    public String toString() {
+        return articuloCodigo + " | " + descripcion + " | cant=" + cantidad + " | pu=" + precioUnitario;
+    }
 }

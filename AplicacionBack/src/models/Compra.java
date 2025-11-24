@@ -1,50 +1,34 @@
 package models;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Compra {
 
-	private int id;
-	private Usuario usuario; 
-	private Carrito carrito; 
-	private List<CompraItem> items;
+	private String id;
+    private String username; // comprador
+    private LocalDateTime fecha;
+    private List<CompraItem> items;
+    private double total;
 
-	public Compra(int id, Usuario usuario, Carrito carrito, List<CompraItem> items) {
-		this.id = id;
-		this.usuario = usuario;
-		this.carrito = carrito;
-		this.items = items;
-	}
+    public Compra(String id, String username, LocalDateTime fecha, List<CompraItem> items) {
+        this.id = id;
+        this.username = username;
+        this.fecha = fecha;
+        this.items = items;
+        this.total = items.stream().mapToDouble(CompraItem::getSubtotal).sum();
+    }
 
-	public Carrito getCarrito() {
-		return carrito;
-	}
+    public String getId() { return id; }
+    public String getUsername() { return username; }
+    public LocalDateTime getFecha() { return fecha; }
+    public List<CompraItem> getItems() { return items; }
+    public double getTotal() { return total; }
 
-	public List<CompraItem> getItems() {
-		return items;
-	}
-
-	public void setItems(List<CompraItem> items) {
-		this.items = items;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public Usuario getUsuario() {
-		return usuario;
-	} 
-	
-	//total queda como parte del historial
-	public double getMontoFinal(){
-		double total=0;
-		for (CompraItem item : items) {
-			total += item.getSubtotal();
-		}
-	
-		return total; 
-	}
+    @Override
+    public String toString() {
+        return "Compra#" + id + " user=" + username + " total=" + total + " items=" + items.size();
+    }
 	
 	
 }

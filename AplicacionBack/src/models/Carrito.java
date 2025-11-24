@@ -1,61 +1,37 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.print.DocFlavor.STRING;
 
 import enums.EstadoDelCarrito;
 
 public class Carrito {
 
-	private int id;
-	private Usuario usuario;
-	private List<CarritoItem> items;
-	private EstadoDelCarrito estado; 
-	
-	public Carrito(int id, Usuario usuario, List<CarritoItem> items, EstadoDelCarrito estado) {
-		this.id = id;
-		this.usuario = usuario; 
-		this.items = items;
-		this.estado = estado;
-	}
+	private String id; 
+    private String username; 
+    private List<CarritoItem> items;
+    private EstadoDelCarrito estado;
 
-	public Usuario getUsuario() {
-		return usuario;
-	}
+    public Carrito(String id, String username) {
+        this.id = id;
+        this.username = username;
+        this.items = new ArrayList<>();
+        this.estado = EstadoDelCarrito.PENDIENTE;
+    }
 
-	public List<CarritoItem> getItems() {
-		return items;
-	}
+    public String getId() { return id; }
+    public String getUsername() { return username; }
+    public List<CarritoItem> getItems() { return items; }
+    public EstadoDelCarrito getEstado() { return estado; }
+    public void setEstado(EstadoDelCarrito estado) { this.estado = estado; }
 
-	public void setItems(List<CarritoItem> items) {
-		this.items = items;
-	}
+    public double getMontoFinal() {
+        return items.stream().mapToDouble(CarritoItem::getSubtotal).sum();
+    }
 
-	public EstadoDelCarrito getEstado() {
-		return estado;
-	}
-
-	public void setEstado(EstadoDelCarrito estado) {
-		this.estado = estado;
-	}
-
-	public int getId() {
-		return id;
-	}
-	
-	//para calcular monto total
-	public double getMontoFinal(){
-		double total=0;
-		for (CarritoItem item : items) {
-			total += item.getSubtotal();
-		}
-	
-		return total; 
-	}
-	
-	
-	
-		
+    @Override
+    public String toString() {
+        return "Carrito{id=" + id + ", user=" + username + ", estado=" + estado + ", total=" + getMontoFinal() + ", items=" + items.size() + "}";
+    }
 
 }

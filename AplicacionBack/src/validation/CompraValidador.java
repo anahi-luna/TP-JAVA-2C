@@ -1,33 +1,27 @@
 package validation;
 
 import exceptions.ValidadorException;
-import models.Carrito;
+
 import models.Compra;
+import models.CompraItem;
+import models.Usuario;
 
 public class CompraValidador {
 
-	public void validar (Compra compra) throws ValidadorException{
-		
-		//compra que no sea nula
-		if (compra == null) {
-			throw new ValidadorException ("La compra no puede ser nula");
-		}
-		
-		//compra asociada con carrito
-		if (compra.getCarrito() == null) {
-			throw new ValidadorException ("La compra debe estar asociado a un carrito");
-		}
-		Carrito carrito = compra.getCarrito();
-		
-		//monto final no sea negativo
-		if (compra.getMontoFinal() < 0) {
-			throw new ValidadorException ("El monto final no debe ser negativo");
-		}
-		
-		//q no este vacio el carrito al final de la compra
-		if (carrito.getItems()== null || carrito.getItems().isEmpty()){// si item es null o esta vacio 
-			throw new ValidadorException ("No se puede finalizar una compra sin articulos");
-		}
-		
-	}
+	public static void validarAntesCompra(Compra compra, Usuario usuario) throws ValidadorException {
+        if (compra == null) throw new ValidadorException("Compra nula");
+        if (compra.getItems() == null || compra.getItems().isEmpty())
+            throw new ValidadorException("No hay items en la compra");
+        if (compra.getTotal() <= 0) throw new ValidadorException("Monto total inválido");
+        if (usuario == null) throw new ValidadorException("Usuario inválido");
+
+        if (usuario.getSaldo() < compra.getTotal())
+            throw new ValidadorException("Saldo insuficiente");
+
+        for (CompraItem it : compra.getItems()) {
+            if (it.getCantidad() <= 0) throw new ValidadorException("Cantidad inválida en item");
+            if (it.getPrecioUnitario() <= 0) throw new ValidadorException("Precio unitario inválido");
+            
+        }
+    }
 }

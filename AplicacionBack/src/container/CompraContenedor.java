@@ -1,41 +1,24 @@
 package container;
 
-import java.util.ArrayList;
 import java.util.List;
+
 import models.Compra;
 
-public class CompraContenedor {
+public class CompraContenedor extends Contenedor<Compra>{
 
-	private List<Compra> _listadoCompra;
-	
 	public CompraContenedor() {
-		this._listadoCompra = new ArrayList<Compra>();
+        super();
+    }
+	
+	@Override
+	protected String extraerClave(Compra compra) {
+		return compra.getId();
 	}
 	
-	//agregamos compra
-	public void agregarCompra(Compra compra) {
-		_listadoCompra.add(compra);
-	}
-
-	//metodo para eliminar compra
-	public void eliminarCompra (Compra compra) {
-		_listadoCompra.remove(compra); 
-	}
+	// helper: devolver copia de todas las compras
+    public List<Compra> getTodas() {
+        return getTodos();
+    }
 	
-	//obtenemos copia del listado 
-	public ArrayList<Compra> getCompras(){
-		ArrayList<Compra> copia = new ArrayList<Compra> (_listadoCompra);
-		return copia;
-	}
-	
-	//buscar id la compra de un usuario
-	public Compra buscarId (int id) {
-		for (Compra compra : _listadoCompra) {
-			if (compra.getId() == id) {
-				return compra;
-			}
-		}
-		return null; // en caso de no encontrar
-	}
 	
 }
