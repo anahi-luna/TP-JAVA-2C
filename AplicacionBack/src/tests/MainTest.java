@@ -124,7 +124,7 @@ public class MainTest {
 		//SERVICIOS
 		ArticuloServicio artServ = new ArticuloServicio(artCont);
 		UsuarioServicio userServ = new UsuarioServicio(userCont);
-		CarritoServicio carritoServ = new CarritoServicio(artCont, userCont, compraCont);
+		CarritoServicio carritoServ = new CarritoServicio(artCont, compraCont);
 		CompraServicio compraServ = new CompraServicio(compraCont);
 		
 		//SERVICIES LOCATOR

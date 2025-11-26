@@ -81,6 +81,8 @@ public class Session implements Runnable{
         			comunicador.enviar("ERROR: servicio no encontrado");
                     continue;
         		}
+        		// INYECTAR USUARIO ACTIVO EN SOLICITUD
+        		soli.setUsuarioActivo(usuarioActual);
         		
         		// Si es CarritoServicio → inyectar sesión
                 if (soli.getRecurso().equals("carrito")) {

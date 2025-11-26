@@ -2,14 +2,12 @@ package services;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import container.ArticuloContenedor;
 import container.CompraContenedor;
-import container.UsuarioContenedor;
 import enums.EstadoDelCarrito;
 import exceptions.ValidadorException;
 import interfaces.Servicio;
@@ -25,20 +23,15 @@ import validation.CompraValidador;
 
 public class CarritoServicio implements Servicio {
 
-	//Carritos activos por username
-	private Map<String, Carrito> carritosActivos = new HashMap<>();
-	
 	private ArticuloContenedor articuloContenedor;
-	private UsuarioContenedor usuarioContenedor;
 	private CompraContenedor compraContenedor;
 	
 	//sesion
 	private Usuario usuarioActivo;
 	private Carrito carritoActivo;
 	
-	public CarritoServicio(ArticuloContenedor a, UsuarioContenedor u, CompraContenedor c) {
+	public CarritoServicio(ArticuloContenedor a, CompraContenedor c) {
 		this.articuloContenedor = a;
-		this.usuarioContenedor =u;
 		this.compraContenedor = c;
 	}
 	
@@ -50,6 +43,7 @@ public class CarritoServicio implements Servicio {
 	
 	@Override
 	public Object ejecutar(Solicitud solicitud) {
+		
 		String accion = solicitud.getAccion().toLowerCase();
 		Map<String, String> p = solicitud.getParametros();
 		

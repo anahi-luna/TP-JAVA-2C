@@ -22,11 +22,16 @@ public class UsuarioServicio implements Servicio{
 	public Object ejecutar(Solicitud solicitud) {
 		String accion = solicitud.getAccion() == null? "": solicitud.getAccion().toLowerCase();
 		Map<String, String> p = solicitud.getParametros();
+		Usuario usuarioActivo = solicitud.getUsuarioActivo();
 		
 		try {
 			switch (accion) {
 			case "crear":
 			case "alta":
+				// Solo admin puede crear nuevos usuarios
+                if (usuarioActivo == null || usuarioActivo.getTipo() != UsuarioTipo.EMPLEADO)
+                    return "ERROR: solo EMPLEADO puede crear usuarios";
+                
 				Usuario u = crearUsuarioDesdeParams(p);
 				UsuarioValidador.validarUsuarioParaAlta(u);
 				if (contenedor.existe(u.getNombreUsuario())) {
@@ -46,15 +51,21 @@ public class UsuarioServicio implements Servicio{
 				return encontrado;
 			
 			case "listar":
+				if (usuarioActivo == null || usuarioActivo.getTipo() != UsuarioTipo.EMPLEADO)
+                    return "ERROR: solo EMPLEADO puede listar todos los usuarios";
 				List<Usuario> todos = contenedor.getTodos();
 				return todos;
 			
 			case "buscar":
+				if (usuarioActivo == null || usuarioActivo.getTipo() != UsuarioTipo.EMPLEADO)
+                    return "ERROR: solo EMPLEADO puede buscar usuarios";
 				String username = p.get("username");
                 Usuario buscado = contenedor.buscar(username);
                 return buscado == null ? ("ERROR: no encontrado " + username) : buscado;
              
-			case "agregarsaldo":  
+			case "agregarsaldo":
+				if (usuarioActivo == null)
+                    return "ERROR: debes estar logueado";
 				String userTo = p.get("username");
                 String montoStr = p.get("monto");
                 Usuario uTarget = contenedor.buscar(userTo);
@@ -67,7 +78,12 @@ public class UsuarioServicio implements Servicio{
                 } catch (NumberFormatException nfe) {
                     return "ERROR: monto inválido";
                 }
+			case "versaldo":
+				if (usuarioActivo == null) return "ERROR: debes estar logueado";
+
+                return "Saldo actual: " + usuarioActivo.getSaldo();
 			case "transferir":
+				if (usuarioActivo == null) return "ERROR: debes estar logueado";
 				String origen = p.get("origen");
                 String destino = p.get("destino");
                 String montoS = p.get("monto");
@@ -88,6 +104,8 @@ public class UsuarioServicio implements Servicio{
                 return "OK: transferencia realizada";
                 
 			case "eliminar":
+				if (usuarioActivo == null || usuarioActivo.getTipo() != UsuarioTipo.EMPLEADO)
+                    return "ERROR: solo EMPLEADO puede eliminar usuarios";
 				String toDelete = p.get("username");
                 boolean del = contenedor.eliminar(toDelete);
                 return del ? "OK: usuario eliminado" : "ERROR: usuario no encontrado";

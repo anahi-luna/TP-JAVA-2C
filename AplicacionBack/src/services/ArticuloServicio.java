@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import container.ArticuloContenedor;
+import enums.UsuarioTipo;
 import exceptions.ValidadorException;
 import interfaces.Servicio;
 import models.Articulo;
+import models.Usuario;
 import parsers.Solicitud;
 import validation.ArticuloValidador;
 
@@ -20,9 +22,13 @@ public class ArticuloServicio implements Servicio{
 	
 	@Override
 	public Object ejecutar(Solicitud solicitud) {
+		Usuario usuarioActivo = solicitud.getUsuarioActivo();
 		String accion = solicitud.getAccion() == null ?"": solicitud.getAccion().toLowerCase();
 		Map<String, String> param = solicitud.getParametros();
 		
+		// Validación global para todo el módulo
+        if (usuarioActivo == null || usuarioActivo.getTipo() != UsuarioTipo.EMPLEADO)
+            return "ERROR: solo EMPLEADO puede usar el módulo de artículos"; 
 		try {
 			switch (accion) {
 			case "crear":	
