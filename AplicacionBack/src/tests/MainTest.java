@@ -116,10 +116,6 @@ public class MainTest {
 			* usuarios/listar
 			*/
 
-		/*UsuarioContenedor cont = new UsuarioContenedor();
-		UsuarioServicio svc = new UsuarioServicio(cont);
-		TiendaServiceLocator locator = new TiendaServiceLocator();
-		locator.registrar("usuarios", svc);*/
 		//CONTENEDORES
 		ArticuloContenedor artCont = new ArticuloContenedor();
 		UsuarioContenedor userCont = new UsuarioContenedor();
@@ -190,8 +186,6 @@ public class MainTest {
                 }
             }
 		}
-        
-        
         
 	}
 

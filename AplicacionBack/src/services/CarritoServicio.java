@@ -32,46 +32,37 @@ public class CarritoServicio implements Servicio {
 	private UsuarioContenedor usuarioContenedor;
 	private CompraContenedor compraContenedor;
 	
+	//sesion
+	private Usuario usuarioActivo;
+	private Carrito carritoActivo;
+	
 	public CarritoServicio(ArticuloContenedor a, UsuarioContenedor u, CompraContenedor c) {
 		this.articuloContenedor = a;
 		this.usuarioContenedor =u;
 		this.compraContenedor = c;
 	}
 	
-	@Override
-	public Object ejecutar(Solicitud solicitud) {
-		String accion = solicitud.getAccion();
-		Map<String, String> p = solicitud.getParametros();
-		
-		return ejecutarInterno(accion, p);
+	// Inyección desde Session
+	public void setSesion(Usuario usuario, Carrito carrito) {
+		this.usuarioActivo= usuario;
+		this.carritoActivo = carrito;
 	}
 	
-	public Object ejecutarInterno(String accion,Map<String,String> p) {
+	@Override
+	public Object ejecutar(Solicitud solicitud) {
+		String accion = solicitud.getAccion().toLowerCase();
+		Map<String, String> p = solicitud.getParametros();
+		
 		try {
-			switch (accion.toLowerCase()){
-				case "crear":
-					return crearCarrito(p);
-				
-				case "agregar":
-					return agregarItem(p);
-				
-				case "quitar":
-					return quitarItem(p);
-					
-				case "vaciar":
-					return vaciarCarrito(p);
-					
-				case "ver":
-					return verCarrito(p);
-				
-				case "finalizar":
-					return finalizarCompra(p);
-				
-				case "listarcompras":
-					return listarCompras(p);
-				default:
-					return "ERROR: acción desconocida " + accion;
-			}
+			return switch (accion) {
+			case "agregar" -> agregarItem(p);
+			case "quitar" ->quitarItem(p);
+			case "ver" ->verCarrito();
+			case "vaciar" ->vaciarCarrito();
+			case "finalizar" ->finalizarCompra();
+			case "listarcompras" -> listarCompras();
+			default -> "ERROR: acción desconocida " + accion;
+			};
 		} catch (ValidadorException ve) {
             return "ERROR_VALIDACION: " + ve.getMessage();
         } catch (RuntimeException re) {
@@ -80,122 +71,73 @@ public class CarritoServicio implements Servicio {
             return "ERROR: " + e.getMessage();
         }
 	}
+
 	
 	//  MÉTODOS PRIVADOS DE ACCIÓN
-	private Object crearCarrito(Map<String,String> p) throws Exception{
-		String username = p.get("username");
-		if (username == null) return "ERROR: falta username";
-		
-		Usuario u = usuarioContenedor.buscar(username);
-        if (u == null) return "ERROR: usuario no existe";
-        
-        // Si ya tiene carrito activo, devolverlo
-        if (carritosActivos.containsKey(username))
-            return "Carrito ya existente: " + carritosActivos.get(username);
-        
-        Carrito c = new Carrito("CARR-" + username, username);
-        carritosActivos.put(username, c);
-        
-        return "OK: carrito creado -> " + c;
-	}
-	
 	private Object agregarItem(Map<String,String> p)throws Exception{
-		String username = p.get("username");
+		
         String codigo = p.get("codigo");
         String cantStr = p.get("cantidad");
         
-        if (username == null || codigo == null || cantStr == null)
-            return "ERROR: faltan parámetros";
+        if (codigo == null || cantStr == null)
+        return "ERROR: faltan parámetros";
         
         int cantidad = Integer.parseInt(cantStr);
 
-        Usuario u = usuarioContenedor.buscar(username);
-        if (u == null) return "ERROR: usuario no existe";
-        
-        Carrito carrito = carritosActivos.get(username);
-        if (carrito == null) return "ERROR: primero debe crear el carrito";
-        
-        CarritoValidador.validarParaOperacion(carrito);
+        CarritoValidador.validarParaOperacion(carritoActivo);
         
         Articulo art = articuloContenedor.buscar(codigo);
         if (art == null) return "ERROR: artículo no existe";
-
+        
         if (art.getStock() < cantidad)
             return "ERROR: stock insuficiente";
         
         // Buscar si ya existe el item en el carrito
-        Optional<CarritoItem> existente = carrito.getItems().stream()
+        Optional<CarritoItem> existente = carritoActivo.getItems().stream()
         			.filter(i -> i.getArticuloCodigo().equals(codigo))
         			.findFirst();
         
         if(existente.isPresent()) {
         	existente.get().setCantidad(existente.get().getCantidad() + cantidad);
         }else {
-        	CarritoItem nuevo = new CarritoItem(codigo, art, cantidad);
-        	carrito.getItems().add(nuevo);
+        	carritoActivo.getItems().add(new CarritoItem(codigo, art, cantidad));
         }
         
-        return "OK: item agregado. Total carrito = " + carrito.getMontoFinal();
+        return "OK: item agregado. Total = " + carritoActivo.getMontoFinal();
         
 	}
 	
 	private Object quitarItem(Map<String,String> p) throws Exception{
-		String username = p.get("username");
+		
         String codigo = p.get("codigo");
-
-        if (username == null || codigo == null)
-            return "ERROR: faltan parámetros";
+        if (codigo == null)
+            return "ERROR: falta código";
         
-        Carrito carrito = carritosActivos.get(username);
-        if (carrito == null) return "ERROR: el usuario no tiene carrito";
+        boolean removed = carritoActivo.getItems()
+        		.removeIf(i -> i.getArticuloCodigo().equals(codigo));
         
-        boolean removed = carrito.getItems().removeIf(i-> i.getArticuloCodigo().equals(codigo));
-        if (!removed) return "ERROR: ese artículo no está en el carrito";
-
-        return "OK: item quitado. Total = " + carrito.getMontoFinal();
+        return removed ? "OK: item quitado" : "ERROR: no estaba en el carrito";
 	}
 	
-	private Object vaciarCarrito(Map<String, String>p) throws Exception{
-		String username = p.get("username");
-        if (username == null) return "ERROR: falta username";
-        
-        Carrito carrito = carritosActivos.get(username);
-        if (carrito == null) return "ERROR: carrito no existe";
-        
-        carrito.getItems().clear();
+	private Object vaciarCarrito(){
+        carritoActivo.getItems().clear();
         
         return "OK: carrito vaciado";
 	}
 	
-	private Object verCarrito(Map<String,String>p)throws Exception{
-		String username = p.get("username");
-        if (username == null) return "ERROR: falta username";
-
-        Carrito carrito = carritosActivos.get(username);
-        if (carrito == null) return "ERROR: no hay carrito";
-
-        return carrito;
+	private Object verCarrito(){
+		return carritoActivo;
 	}
 	
 	// FINALIZAR COMPRA
-	private Object finalizarCompra(Map<String,String>p)throws Exception{
-		String username = p.get("username");
-        if (username == null) return "ERROR: falta username";
+	private Object finalizarCompra()throws Exception{
 
-        Usuario u = usuarioContenedor.buscar(username);
-        if (u == null) return "ERROR: usuario no existe";
-
-        Carrito carrito = carritosActivos.get(username);
-        if (carrito == null) return "ERROR: no tiene carrito";
-        
-        CarritoValidador.validarParaOperacion(carrito);
-        
-        if (carrito.getItems().isEmpty())
+		if (carritoActivo.getItems().isEmpty())
             return "ERROR: carrito vacío";
+		
+		List<CompraItem> lista = new ArrayList<>();
         
-        // Crear CompraItem desde los CarritoItem
-        List<CompraItem> lista = new ArrayList<>();
-        for(CarritoItem ci: carrito.getItems()) {
+        for(CarritoItem ci: carritoActivo.getItems()) {
         	Articulo art = ci.getArticulo();
             if (art.getStock() < ci.getCantidad())
                 return "ERROR: stock insuficiente en " + art.getCodigo();
@@ -211,44 +153,38 @@ public class CarritoServicio implements Servicio {
         
         // Crear compra
         String compraId = "CMP-" + System.currentTimeMillis();
-        Compra compra = new Compra(compraId, username, LocalDateTime.now(), lista);
+        Compra compra = new Compra(compraId,
+        		usuarioActivo.getNombreUsuario(),
+        		LocalDateTime.now(), lista);
         
-        CompraValidador.validarAntesCompra(compra, u);
+        CompraValidador.validarAntesCompra(compra, usuarioActivo);
         
         // Descontar stock
-        for (CarritoItem ci : carrito.getItems()) {
+        for (CarritoItem ci : carritoActivo.getItems()) {
             Articulo art = ci.getArticulo();
             art.setStock(art.getStock() - ci.getCantidad());
         }
         
         // Descontar saldo del usuario
-        u.setSaldo(u.getSaldo() - compra.getTotal());
+        usuarioActivo.setSaldo(usuarioActivo.getSaldo() - compra.getTotal());
         
         // Guardar compra
         compraContenedor.crear(compra);
         
         // Cerrar carrito
-        carrito.setEstado(EstadoDelCarrito.FINALIZADO);
-        carritosActivos.remove(username);
+        carritoActivo.setEstado(EstadoDelCarrito.FINALIZADO);
+        
+        carritoActivo = new Carrito("CARR-" + usuarioActivo.getNombreUsuario(),
+                usuarioActivo.getNombreUsuario());
         
         return "OK: compra finalizada. ID = " + compra.getId() +
                 " | total = " + compra.getTotal();
 	}
 	
-	private Object listarCompras(Map<String,String>p) {
-		String username = p.get("username");
-        if (username == null)
-            return "ERROR: falta username";
-        
-        List<Compra> todas = compraContenedor.getTodas();
-        
-        List<Compra> filtradas = new ArrayList<>();
-        for(Compra c : todas) {
-        	if(c.getUsername().equals(username))
-        		filtradas.add(c);
-        }
-        
-        return filtradas;
+	private Object listarCompras() {
+		return compraContenedor.getTodas().stream()
+				.filter(c -> c.getUsername().equals(usuarioActivo.getNombreUsuario()))
+				.toList();
 	}
 
 }
