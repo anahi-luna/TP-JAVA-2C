@@ -1,5 +1,8 @@
 # Sistema de Tienda (Cliente/Servidor con Sockets + Hilos)
-
+**👥 Integrantes**
+- Luz Gonzalez
+- Daniel Espindola
+- Rebeca Anahí Luna Colque
 🚀 **Cómo ejecutar el sistema**
 
 # 1️ Iniciar el Servidor
