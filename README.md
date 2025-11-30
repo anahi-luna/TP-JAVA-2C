@@ -1,6 +1,8 @@
-#Sistema de Tienda (Cliente/Servidor con Sockets + Hilos)
+# Sistema de Tienda (Cliente/Servidor con Sockets + Hilos)
+
 🚀 **Cómo ejecutar el sistema**
-#1️⃣ Iniciar el Servidor
+
+# 1️ Iniciar el Servidor
 
 **Ejecutar:**
 ```bash
@@ -14,7 +16,7 @@ Servidor escuchando...
 ```
 ➡ Esto confirma que el usuario admin ya está disponible.
 
-#2️⃣ Iniciar el Cliente
+# 2️⃣ Iniciar el Cliente
 
 **Ejecutar:**
 ```bash
@@ -31,12 +33,12 @@ cliente>
 ```
 Ya podés comenzar a enviar comandos.
 
-#🔐 Iniciar sesión
+# 🔐 Iniciar sesión
 ```bash
 usuario/login?username=admin&password=1234
 ```
 
-#🧪 COMANDOS DE PRUEBA
+# 🧪 COMANDOS DE PRUEBA
 **📦 ARTÍCULOS**
 ```bash
 articulo/crear?codigo=A2&descripcion=Cuaderno+Rayado&precio=450&stock=50
