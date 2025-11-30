@@ -36,7 +36,7 @@ public class Session implements Runnable{
 	            enviarBloque(
 	                "=== Bienvenido a la Tienda ===",
 	                "Debe iniciar sesión. Formato:",
-	                "login username=xxx password=xxx"
+	                "usuario/login?username=xxxx&password=xxxx"
 	            );
 		
 	            boolean logueado = false;
